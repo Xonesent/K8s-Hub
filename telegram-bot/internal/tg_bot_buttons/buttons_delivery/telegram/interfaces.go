@@ -1,7 +1,10 @@
 package tg_buttons
 
-import "github.com/go-telegram/bot"
+import (
+	"context"
+	"github.com/Xonesent/K8s-Hub/telegram-bot/internal/tg_bot_buttons/buttons_usecase"
+)
 
-type ButtonsHDL interface {
-	StartBot() bot.HandlerFunc
+type ButtonsUC interface {
+	DefaultHandler(ctx context.Context, sentMessage *buttons_usecase.SentMessage) error
 }

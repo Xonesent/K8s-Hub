@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/internal/server"
 	clickDB "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/clickhouse"
@@ -10,6 +8,7 @@ import (
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/helper_modules/logger"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"log"
 
 	"github.com/Xonesent/K8s-Hub/telegram-bot/config"
 )

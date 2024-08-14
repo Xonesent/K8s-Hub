@@ -8,10 +8,6 @@ clickhouse_init:
 lint:
 	golangci-lint -v run
 
-#clickhouse-create:
-#	docker exec -it clickhouse-server bash
-#	clickhouse-client --host localhost --port 9000 --user default
-
 migrate-up:
 	goose -dir ./migrations clickhouse "tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@localhost:9000" up
 # goose -dir ./migrations clickhouse "tcp://default:fb928275-8771-44e2-a73d-739afa94d725@localhost:9000" up

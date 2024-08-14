@@ -4,6 +4,7 @@ go 1.22.5
 
 require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.27.1
+	github.com/Masterminds/squirrel v1.5.4
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/go-telegram/bot v1.6.1
 	github.com/joho/godotenv v1.5.1
@@ -23,6 +24,8 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
+	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

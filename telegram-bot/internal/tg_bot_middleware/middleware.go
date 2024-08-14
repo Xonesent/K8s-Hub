@@ -9,8 +9,8 @@ import (
 
 type MDWManager struct{}
 
-func NewMDWManager() MDWManager {
-	return MDWManager{}
+func NewMDWManager() *MDWManager {
+	return &MDWManager{}
 }
 
 func (m *MDWManager) DefaultMiddleware(next bot.HandlerFunc) bot.HandlerFunc {
