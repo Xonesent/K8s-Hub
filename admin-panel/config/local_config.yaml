@@ -1,0 +1,10 @@
+ClickHouse:
+  Host: "localhost"
+  Port: "9000"
+  Database: CLICKHOUSE_DATABASE
+  User: CLICKHOUSE_USER
+  Password: CLICKHOUSE_PASSWORD
+
+Fiber:
+  Host: "localhost"
+  Port: "9000"
