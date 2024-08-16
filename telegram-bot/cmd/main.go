@@ -1,16 +1,17 @@
 package main
 
 import (
+	"log"
+
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
+	"github.com/Xonesent/K8s-Hub/telegram-bot/config"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/internal/server"
+	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/constant"
 	clickDB "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/clickhouse"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/telegram"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/helper_modules/logger"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"log"
-
-	"github.com/Xonesent/K8s-Hub/telegram-bot/config"
 )
 
 func main() {
@@ -18,11 +19,11 @@ func main() {
 		log.Fatalf("Error to init logger: %v\n", err)
 	}
 
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(constant.EnvFile); err != nil {
 		zap.L().Fatal("Error loading env variables", zap.Error(err))
 	}
 
-	cfg, err := config.LoadConfig("dev_config")
+	cfg, err := config.LoadConfig(constant.DevConfig)
 	if err != nil {
 		zap.L().Fatal("Error loading config", zap.Error(err))
 	}

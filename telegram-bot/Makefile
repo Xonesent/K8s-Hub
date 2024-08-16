@@ -1,17 +1,20 @@
-clickhouse_init:
-	docker run -d --name clickhouse-server -p 8123:8123 -p 9000:9000 --ulimit nofile=262144:262144 \
-		-e CLICKHOUSE_USER=${CLICKHOUSE_USER} \
-        -e CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD} \
-        -e CLICKHOUSE_DB=${CLICKHOUSE_DATABASE} \
-        yandex/clickhouse-server
+run-without-compile:
+	go run cmd/main.go
 
-lint:
-	golangci-lint -v run
+build-server-windows:
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o server-windows.exe ./main.go
 
-migrate-up:
-	goose -dir ./migrations clickhouse "tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@localhost:9000" up
-# goose -dir ./migrations clickhouse "tcp://default:fb928275-8771-44e2-a73d-739afa94d725@localhost:9000" up
+build-server-linux:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o server-linux ./main.go
 
-migrate-down:
-	goose -dir ./migrations clickhouse "tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@localhost:9000" down
-# goose -dir ./migrations clickhouse "tcp://default:fb928275-8771-44e2-a73d-739afa94d725@localhost:9000" down
+run-after-compile:
+	./server-windows.exe
+
+docker-build:
+	docker build -t telegram-bot .
+
+docker-run:
+	docker run -d --name telegram-bot --network clickhouse-network telegram-bot:latest
+
+govulncheck:
+	govulncheck ./...

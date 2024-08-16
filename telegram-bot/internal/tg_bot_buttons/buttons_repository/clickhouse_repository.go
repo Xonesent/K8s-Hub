@@ -2,11 +2,12 @@ package buttons_repository
 
 import (
 	"context"
+	"time"
+
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/config"
 	click_fields "github.com/Xonesent/K8s-Hub/telegram-bot/internal/database_stores/clickhouse_fields"
-	"time"
 )
 
 type ButtonsCHRepository struct {

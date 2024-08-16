@@ -8,6 +8,7 @@ const (
 	CreatedAtColumnName = "created_at"
 )
 
+// nolint:gochecknoglobals // needed
 var (
 	InsertMessageColumns = []string{
 		TgIdColumnName,

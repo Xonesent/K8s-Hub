@@ -7,9 +7,6 @@ import (
 
 func ValidateDefaultHandler() bot.MatchFunc {
 	return func(update *models.Update) bool {
-		if update.Message != nil {
-			return true
-		}
-		return false
+		return update.Message != nil
 	}
 }

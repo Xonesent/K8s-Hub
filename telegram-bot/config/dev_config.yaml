@@ -1,5 +1,5 @@
 ClickHouse:
-  Host: "localhost"
+  Host: "clickhouse-server"
   Port: "9000"
   Database: CLICKHOUSE_DATABASE
   User: CLICKHOUSE_USER
