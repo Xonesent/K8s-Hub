@@ -1,6 +1,8 @@
-package validator
+package validate
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+)
 
 var validate *validator.Validate // nolint:gochecknoglobals // Needed for proper validator work
 

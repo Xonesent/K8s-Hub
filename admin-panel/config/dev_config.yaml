@@ -7,4 +7,4 @@ ClickHouse:
 
 Fiber:
   Host: "admin-panel"
-  Port: "9000"
+  Port: "8841"

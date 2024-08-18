@@ -27,7 +27,7 @@ func main() {
 		zap.L().Fatal("Error loading env variables", zap.Error(err))
 	}
 
-	cfg, err := config.LoadConfig(constant.DevConfig)
+	cfg, err := config.LoadConfig(constant.LocalConfig)
 	if err != nil {
 		zap.L().Fatal("Error loading config", zap.Error(err))
 	}
