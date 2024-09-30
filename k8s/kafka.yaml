@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kafka-pv
+spec:
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data/kafka
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+spec:
+  serviceName: kafka
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: kafka
+          image: confluentinc/cp-kafka:latest
+          ports:
+            - containerPort: 9092
+          env:
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_ZOOKEEPER_CONNECT
+            - name: KAFKA_ADVERTISED_LISTENERS
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_ADVERTISED_LISTENERS
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+            - name: KAFKA_BROKER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BROKER_ID
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+            - name: KAFKA_LOG_DIRS
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_LOG_DIRS
+            - name: KAFKA_CREATE_TOPICS
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_CREATE_TOPICS
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-clusterip
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9092
+      name: kafka-port
+  selector:
+    app: kafka

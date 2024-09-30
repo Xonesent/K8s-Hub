@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clickhouse-config
+data:
+  CLICKHOUSE_USER: "default"
+  CLICKHOUSE_DB: "telegram"
+  CLICKHOUSE_HOST: "clickhouse-clusterip"
+  CLICKHOUSE_PORT: "8123"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-panel-config
+data:
+  CLICKHOUSE_HOST: clickhouse-clusterip
+  CLICKHOUSE_PORT: "9000"
+  FIBER_PORT: "8841"
+  GRPC_PORT: "50051"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config
+data:
+  KAFKA_ZOOKEEPER_CONNECT: zookeeper-clusterip:2181
+  KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-clusterip:9092
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+  KAFKA_BROKER_ID : "1"
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR : "1"
+  KAFKA_LOG_DIRS : /var/lib/kafka/data
+  KAFKA_CREATE_TOPICS : "k8s-hub:3:1"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: statistics-sender-config
+data:
+  CLICKHOUSE_HOST: clickhouse-clusterip
+  CLICKHOUSE_PORT: "9000"
+  KAFKA_BROKERS: kafka-clusterip:9092
+  KAFKA_PRODUCER_ACKS: "-1"
+  KAFKA_PRODUCER_RETRIES: "5"
+  KAFKA_PRODUCER_RETURN: "true"
+  KAFKA_CONSGROUP_REBALANCE: roundrobin
+  KAFKA_CONSGROUP_OFFSETS: newest
+  KAFKA_CONSGROUP_SESSION: 10s
+  KAFKA_CONSGROUP_RETRIES: "5"
+  KAFKA_CONSGROUP_AUTOCOMMIT: "true"
+  GRPC_HOSTS: telegram-bot:telegram-bot-clusterip,admin-panel:admin-panel-clusterip
+  GRPC_PORTS: telegram-bot:50052,admin-panel:50051
+  TIMERS: 18:10:00
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegram-bot-config
+data:
+  dev_config.yaml: |
+    ClickHouse:
+      Host: "clickhouse-clusterip"
+      Port: CLICKHOUSE_PORT
+      Database: CLICKHOUSE_DATABASE
+      User: CLICKHOUSE_USER
+      Password: CLICKHOUSE_PASSWORD
+    
+    Telegram:
+      Token: TELEGRAM_TOKEN
+    
+    Grpc:
+      Host: GRPC_HOST
+      Port: "50052"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zookeeper-config
+data:
+  ZOOKEEPER_CLIENT_PORT: "2181"

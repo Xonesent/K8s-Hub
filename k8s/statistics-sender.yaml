@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statistics-sender
+  labels:
+    owner : xonest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statistics-sender
+  template:
+    metadata:
+      labels:
+        app: statistics-sender
+    spec:
+      containers:
+        - name: statistics-sender
+          image: xonest/statistics-sender:latest
+          ports:
+            - name: grpc
+              containerPort: 50051
+            - name: http
+              containerPort: 8841
+          env:
+            - name: CLICKHOUSE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: CLICKHOUSE_HOST
+            - name: CLICKHOUSE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: CLICKHOUSE_PORT
+            - name: CLICKHOUSE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: statistics-sender-secret
+                  key: CLICKHOUSE_USER
+            - name: CLICKHOUSE_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: statistics-sender-secret
+                  key: CLICKHOUSE_DATABASE
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: statistics-sender-secret
+                  key: CLICKHOUSE_PASSWORD
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_BROKERS
+            - name: KAFKA_PRODUCER_ACKS
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_PRODUCER_ACKS
+            - name: KAFKA_PRODUCER_RETRIES
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_PRODUCER_RETRIES
+            - name: KAFKA_PRODUCER_RETURN
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_PRODUCER_RETURN
+            - name: KAFKA_CONSGROUP_REBALANCE
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_CONSGROUP_REBALANCE
+            - name: KAFKA_CONSGROUP_OFFSETS
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_CONSGROUP_OFFSETS
+            - name: KAFKA_CONSGROUP_SESSION
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_CONSGROUP_SESSION
+            - name: KAFKA_CONSGROUP_RETRIES
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_CONSGROUP_RETRIES
+            - name: KAFKA_CONSGROUP_AUTOCOMMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: KAFKA_CONSGROUP_AUTOCOMMIT
+            - name: GRPC_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: GRPC_HOSTS
+            - name: GRPC_PORTS
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: GRPC_PORTS
+            - name: TIMERS
+              valueFrom:
+                configMapKeyRef:
+                  name: statistics-sender-config
+                  key: TIMERS

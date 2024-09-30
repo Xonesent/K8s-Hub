@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-panel
+  labels:
+    owner : xonest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-panel
+  template:
+    metadata:
+      labels:
+        app: admin-panel
+    spec:
+      containers:
+        - name: admin-panel
+          image: xonest/admin-panel:latest
+          ports:
+            - name: grpc
+              containerPort: 50051
+            - name: http
+              containerPort: 8841
+          env:
+            - name: CLICKHOUSE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: admin-panel-config
+                  key: CLICKHOUSE_HOST
+            - name: CLICKHOUSE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: admin-panel-config
+                  key: CLICKHOUSE_PORT
+            - name: FIBER_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: FIBER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: admin-panel-config
+                  key: FIBER_PORT
+            - name: GRPC_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: GRPC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: admin-panel-config
+                  key: GRPC_PORT
+            - name: CLICKHOUSE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: admin-panel-secret
+                  key: CLICKHOUSE_USER
+            - name: CLICKHOUSE_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: admin-panel-secret
+                  key: CLICKHOUSE_DATABASE
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: admin-panel-secret
+                  key: CLICKHOUSE_PASSWORD
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-panel-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: admin-panel
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: 50051 # Порт внешний
+      targetPort: 50051 # Порт пода
+
+    - name: http
+      protocol: TCP
+      port: 8841 # Порт внешний
+      targetPort: 8841 # Порт пода
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-panel-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: admin-panel
+  ports:
+    - port: 50051
+      targetPort: 50051
+      protocol: TCP
+      name: grpc
+      nodePort: 30002
+
+    - port: 8841
+      targetPort: 8841
+      protocol: TCP
+      name: http
+      nodePort: 30003

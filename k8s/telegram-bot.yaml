@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-bot
+  labels:
+    owner : xonest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-bot
+    spec:
+      containers:
+        - name: telegram-bot
+          image: xonest/telegram-bot:latest
+          ports:
+            - containerPort: 50052
+          env:
+            - name: TELEGRAM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-bot-secret
+                  key: TELEGRAM_TOKEN
+            - name: CLICKHOUSE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-bot-secret
+                  key: CLICKHOUSE_USER
+            - name: CLICKHOUSE_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-bot-secret
+                  key: CLICKHOUSE_DATABASE
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-bot-secret
+                  key: CLICKHOUSE_PASSWORD
+            - name: CLICKHOUSE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-bot-secret
+                  key: CLICKHOUSE_PORT
+            - name: GRPC_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config/dev_config.yaml
+              subPath: dev_config.yaml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: telegram-bot-config
+            items:
+              - key: dev_config.yaml
+                path: dev_config.yaml
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegram-bot-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: telegram-bot
+  ports:
+    - name: tcp
+      protocol: TCP
+      port: 50052 # Порт внешний
+      targetPort: 50052 # Порт пода
