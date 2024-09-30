@@ -1,6 +1,7 @@
 package config
 
 import (
+	grpcServer "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/grpc"
 	"strings"
 
 	clickDB "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/clickhouse"
@@ -14,6 +15,7 @@ const path = "./config"
 type Config struct {
 	ClickHouse clickDB.ConfigClickHouse `yaml:"ClickHouse" validate:"required"`
 	Telegram   telegram.ConfigTelegram  `yaml:"Telegram" validate:"required"`
+	Grpc       grpcServer.GRPCConfig    `yaml:"Grpc" validate:"required"`
 }
 
 func LoadConfig(configName string) (cfg Config, err error) {

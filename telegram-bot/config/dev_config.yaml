@@ -1,5 +1,5 @@
 ClickHouse:
-  Host: "clickhouse-server"
+  Host: "clickhouse"
   Port: "9000"
   Database: CLICKHOUSE_DATABASE
   User: CLICKHOUSE_USER
@@ -7,3 +7,7 @@ ClickHouse:
 
 Telegram:
   Token: TELEGRAM_TOKEN
+
+Grpc:
+  Host: "telegram-bot"
+  Port: "50052"

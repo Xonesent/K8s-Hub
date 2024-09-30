@@ -11,11 +11,11 @@ import (
 )
 
 type ConfigClickHouse struct {
-	Host     string `yaml:"Host" validate:"required"`
-	Port     string `yaml:"Port" validate:"required"`
-	Database string `yaml:"Database" validate:"required"`
-	User     string `yaml:"User" validate:"required"`
-	Password string `yaml:"Password" validate:"required"`
+	Host     string `envconfig:"CLICKHOUSE_HOST" validate:"required"`
+	Port     string `envconfig:"CLICKHOUSE_PORT" validate:"required"`
+	Database string `envconfig:"CLICKHOUSE_DATABASE" validate:"required"`
+	User     string `envconfig:"CLICKHOUSE_USER" validate:"required"`
+	Password string `envconfig:"CLICKHOUSE_PASSWORD" validate:"required"`
 }
 
 // nolint:ireturn // Connector was taken from clickhouse repository (Probably best practices)
