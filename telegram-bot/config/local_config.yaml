@@ -1,9 +1,13 @@
 ClickHouse:
   Host: "localhost"
-  Port: "9000"
+  Port-yaml: "9000"
   Database: CLICKHOUSE_DATABASE
   User: CLICKHOUSE_USER
   Password: CLICKHOUSE_PASSWORD
 
 Telegram:
   Token: TELEGRAM_TOKEN
+
+Grpc:
+  Host: "localhost"
+  Port: "50052"

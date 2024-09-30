@@ -2,18 +2,20 @@ package main
 
 import (
 	"context"
+	grpcServer "github.com/Xonesent/K8s-Hub/admin-panel/pkg/dependency_connectors/grpc"
+	"google.golang.org/grpc"
 	"log"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/Xonesent/K8s-Hub/admin-panel/config"
 	"github.com/Xonesent/K8s-Hub/admin-panel/internal/server"
-	"github.com/Xonesent/K8s-Hub/admin-panel/pkg/constant"
 	clickDB "github.com/Xonesent/K8s-Hub/admin-panel/pkg/dependency_connectors/clickhouse"
 	fiberApp "github.com/Xonesent/K8s-Hub/admin-panel/pkg/dependency_connectors/fiber"
 	"github.com/Xonesent/K8s-Hub/admin-panel/pkg/helper_modules/logger"
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+
+	_ "github.com/Xonesent/K8s-Hub/admin-panel/cmd/docs"
 )
 
 func main() {
@@ -23,15 +25,19 @@ func main() {
 		log.Fatalf("Error to init logger: %v\n", err)
 	}
 
-	if err := godotenv.Load(constant.EnvFile); err != nil {
-		zap.L().Fatal("Error loading env variables", zap.Error(err))
-	}
+	//if err := godotenv.Load(constant.LocalEnvFile); err != nil {
+	//	zap.L().Fatal("Error loading env variables", zap.Error(err))
+	//}
 
-	cfg, err := config.LoadConfig(constant.LocalConfig)
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		zap.L().Fatal("Error loading config", zap.Error(err))
 	}
 
+	run(ctx, &cfg)
+}
+
+func run(ctx context.Context, cfg *config.Config) {
 	clickhouseDB, err := clickDB.NewClickhouseDB(&cfg.ClickHouse)
 	if err != nil {
 		zap.L().Fatal("Error connecting clickhouse", zap.Error(err))
@@ -53,10 +59,17 @@ func main() {
 		}
 	}(fiberClient)
 
+	gRPCServer := grpcServer.NewGRPCServer()
+	defer func(gRPCServer *grpc.Server) {
+		gRPCServer.GracefulStop()
+		zap.L().Info("Grpc Server closed properly")
+	}(gRPCServer)
+
 	s := server.NewServer(
-		&cfg,
+		cfg,
 		clickhouseDB,
 		fiberClient,
+		gRPCServer,
 	)
 	if err = s.Run(); err != nil {
 		zap.L().Fatal("Cannot start server", zap.Error(err))
