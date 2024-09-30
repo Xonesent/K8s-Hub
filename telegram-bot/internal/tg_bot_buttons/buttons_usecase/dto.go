@@ -18,3 +18,8 @@ func (d *SentMessage) toSentMessage() buttons_repository.SentMessage {
 		ChatId:  d.ChatId,
 	}
 }
+
+type SendMessage struct {
+	Message string
+	ChatId  uint32
+}

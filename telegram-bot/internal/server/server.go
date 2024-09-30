@@ -2,6 +2,9 @@ package server
 
 import (
 	"context"
+	"fmt"
+	"google.golang.org/grpc"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,17 +20,20 @@ type Server struct {
 	cfg        *config.Config
 	clickhouse driver.Conn
 	tgBot      *bot.Bot
+	gRPCServer *grpc.Server
 }
 
 func NewServer(
 	cfg *config.Config,
 	clickhouse driver.Conn,
 	tgBot *bot.Bot,
+	gRPCServer *grpc.Server,
 ) *Server {
 	return &Server{
 		cfg:        cfg,
 		clickhouse: clickhouse,
 		tgBot:      tgBot,
+		gRPCServer: gRPCServer,
 	}
 }
 
@@ -43,7 +49,20 @@ func (s *Server) Run() error {
 		s.tgBot.Start(ctx)
 	}()
 
-	zap.L().Info("Server is running")
+	go func() {
+		grpcAddress := fmt.Sprintf("%s:%s", s.cfg.Grpc.Host, s.cfg.Grpc.Port)
+
+		listener, err := net.Listen("tcp", grpcAddress)
+		if err != nil {
+			zap.L().Fatal("Failed to listen", zap.Error(err))
+		}
+
+		zap.L().Info("Grpc Server is started on " + grpcAddress)
+
+		if err := s.gRPCServer.Serve(listener); err != nil {
+			zap.L().Fatal("Failed to GRPC serve", zap.Error(err))
+		}
+	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

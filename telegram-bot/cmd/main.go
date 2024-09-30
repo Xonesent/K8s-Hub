@@ -1,17 +1,17 @@
 package main
 
 import (
-	"log"
-
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/config"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/internal/server"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/constant"
 	clickDB "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/clickhouse"
+	grpcServer "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/grpc"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/telegram"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/helper_modules/logger"
-	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"log"
 )
 
 func main() {
@@ -19,9 +19,9 @@ func main() {
 		log.Fatalf("Error to init logger: %v\n", err)
 	}
 
-	if err := godotenv.Load(constant.EnvFile); err != nil {
-		zap.L().Fatal("Error loading env variables", zap.Error(err))
-	}
+	//if err := godotenv.Load(constant.EnvFile); err != nil {
+	//	zap.L().Fatal("Error loading env variables", zap.Error(err))
+	//}
 
 	cfg, err := config.LoadConfig(constant.DevConfig)
 	if err != nil {
@@ -41,11 +41,21 @@ func main() {
 	}(&clickhouseDB)
 
 	telegramBot, err := telegram.NewTelegramBot(cfg.Telegram)
+	if err != nil {
+		zap.L().Fatal("Error connecting telegram", zap.Error(err))
+	}
+
+	gRPCServer := grpcServer.NewGRPCServer()
+	defer func(gRPCServer *grpc.Server) {
+		gRPCServer.GracefulStop()
+		zap.L().Info("Grpc Server closed properly")
+	}(gRPCServer)
 
 	s := server.NewServer(
 		&cfg,
 		clickhouseDB,
 		telegramBot,
+		gRPCServer,
 	)
 	if err = s.Run(); err != nil {
 		zap.L().Fatal("Cannot start server", zap.Error(err))

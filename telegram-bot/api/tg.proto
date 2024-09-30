@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option go_package = "/tgProto";
+
+service TgService{
+  rpc BotSendMessage (MessageParams) returns (SendResponse);
+}
+
+message MessageParams {
+  uint32 chatId = 1;
+  string message = 2;
+}
+
+message SendResponse {}

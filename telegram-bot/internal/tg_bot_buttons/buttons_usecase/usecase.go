@@ -29,7 +29,16 @@ func (u *ButtonsUseCase) DefaultHandler(ctx context.Context, sentMessage *SentMe
 		return err
 	}
 
-	sendMessageDTO := tg_utils.FormSimpleResponse(sentMessage.ChatId, tg_resp.DefaultResponse)
+	sendMessageDTO := tg_utils.TgSendMessage(sentMessage.ChatId, tg_resp.DefaultResponse)
+	if _, err := u.b.SendMessage(ctx, &sendMessageDTO); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *ButtonsUseCase) BotSendMessage(ctx context.Context, sendMessage *SendMessage) error {
+	sendMessageDTO := tg_utils.TgSendMessage(int64(sendMessage.ChatId), sendMessage.Message)
 	if _, err := u.b.SendMessage(ctx, &sendMessageDTO); err != nil {
 		return err
 	}
