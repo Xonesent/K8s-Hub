@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/IBM/sarama"
 	"github.com/Xonesent/K8s-Hub/statistics-sender/config"
@@ -9,7 +11,6 @@ import (
 	clickDB "github.com/Xonesent/K8s-Hub/statistics-sender/pkg/dependency_connectors/clickhouse"
 	"github.com/Xonesent/K8s-Hub/statistics-sender/pkg/helper_modules/logger"
 	"go.uber.org/zap"
-	"log"
 )
 
 func main() {
@@ -17,6 +18,7 @@ func main() {
 		log.Fatalf("Error to init logger: %v\n", err)
 	}
 
+	// nolint:gocritic // needed for local compilation
 	//if err := godotenv.Load(constant.LocalEnvFile); err != nil {
 	//	zap.L().Fatal("Error loading env variables", zap.Error(err))
 	//}

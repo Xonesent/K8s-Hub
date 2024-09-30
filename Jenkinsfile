@@ -6,7 +6,7 @@ pipeline {
             steps {
                 catchError(buildResult: 'Success', stageResult: 'UNSTABLE') {
                     sh {'''
-                        golangci-lint-v run
+                        golangci-lint -v run
                     '''}
                 }
             }

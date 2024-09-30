@@ -3,11 +3,12 @@ package server
 import (
 	"context"
 	"fmt"
-	"google.golang.org/grpc"
 	"net"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"google.golang.org/grpc"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/go-telegram/bot"

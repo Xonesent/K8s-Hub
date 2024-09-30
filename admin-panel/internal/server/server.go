@@ -2,16 +2,17 @@ package server
 
 import (
 	"fmt"
+	"net"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/Xonesent/K8s-Hub/admin-panel/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"net"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 type Server struct {

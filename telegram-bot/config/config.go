@@ -1,8 +1,9 @@
 package config
 
 import (
-	grpcServer "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/grpc"
 	"strings"
+
+	grpcServer "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/grpc"
 
 	clickDB "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/clickhouse"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/dependency_connectors/telegram"

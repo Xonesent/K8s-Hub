@@ -30,7 +30,6 @@ linters:
     - containedctx
     - contextcheck
     - copyloopvar
-    - decorder
     - dupl
     - dupword
     - durationcheck
@@ -99,10 +98,3 @@ linters-settings:
       - performance
       - experimental
       - opinionated
-  decorder:
-    disable-dec-order-check: false
-    dec-order:
-      - const
-      - var
-      - type
-      - func

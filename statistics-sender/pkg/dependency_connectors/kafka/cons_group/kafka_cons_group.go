@@ -2,6 +2,7 @@ package cons_group
 
 import (
 	"fmt"
+
 	"github.com/IBM/sarama"
 	event_dropper "github.com/Xonesent/K8s-Hub/statistics-sender/internal/statistics_dropper/dropper_delivery/event"
 	"go.uber.org/zap"
@@ -36,7 +37,9 @@ func (c *Consumer) ConsumeClaim(session sarama.ConsumerGroupSession, claim saram
 				zap.L().Info("message channel was closed")
 				return nil
 			}
-			zap.L().Info(fmt.Sprintf("Message claimed: value = %s, timestamp = %v, topic = %s", string(msg.Value), msg.Timestamp, msg.Topic))
+
+			zap.L().Info(fmt.Sprintf("Message claimed: value = %s, timestamp = %v, topic = %s",
+				string(msg.Value), msg.Timestamp, msg.Topic))
 
 			if err := event_dropper.MapDropperEvents(session.Context(), msg, c.dropperHDL); err != nil {
 				zap.L().Info("Error handling message", zap.Error(err))

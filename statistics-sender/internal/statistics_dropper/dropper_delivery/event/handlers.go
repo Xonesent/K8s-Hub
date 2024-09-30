@@ -3,6 +3,7 @@ package event_dropper
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/IBM/sarama"
 	"github.com/Xonesent/K8s-Hub/statistics-sender/config"
 	models "github.com/Xonesent/K8s-Hub/statistics-sender/internal/business_models"

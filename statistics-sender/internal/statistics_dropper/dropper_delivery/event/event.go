@@ -2,6 +2,7 @@ package event_dropper
 
 import (
 	"context"
+
 	"github.com/IBM/sarama"
 )
 

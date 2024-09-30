@@ -3,12 +3,13 @@ package server
 import (
 	"context"
 	"errors"
-	"github.com/Xonesent/K8s-Hub/statistics-sender/pkg/constant"
 	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
+
+	"github.com/Xonesent/K8s-Hub/statistics-sender/pkg/constant"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/IBM/sarama"
@@ -51,6 +52,7 @@ func (s *Server) Run() error {
 
 	go func() {
 		defer wg.Done()
+
 		for {
 			if err := s.consumerGroup.Consume(ctx, []string{constant.TopicK8sHub}, &consGroup); err != nil {
 				if errors.Is(err, sarama.ErrClosedConsumerGroup) {

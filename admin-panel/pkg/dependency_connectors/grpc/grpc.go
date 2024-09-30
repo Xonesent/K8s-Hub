@@ -2,6 +2,7 @@ package grpcServer
 
 import (
 	"context"
+
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -20,8 +21,6 @@ func NewGRPCServer() *grpc.Server {
 			errorHandlingInterceptor(),
 		),
 	)
-
-	//grpc_health_v1.RegisterHealthServer(grpcServer, service.NewHealthService())
 
 	reflection.Register(grpcServer)
 
@@ -62,6 +61,7 @@ func errorHandlingInterceptor() grpc.UnaryServerInterceptor {
 		if err != nil {
 			return nil, status.Errorf(status.Code(err), "gRPC error: %v", err)
 		}
+
 		return resp, nil
 	}
 }

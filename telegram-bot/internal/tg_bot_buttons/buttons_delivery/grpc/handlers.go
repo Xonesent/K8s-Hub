@@ -3,7 +3,7 @@ package grpc_tg
 import (
 	"context"
 
-	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/api/tg_proto"
+	tgProto "github.com/Xonesent/K8s-Hub/telegram-bot/pkg/api/tg_proto"
 )
 
 type GrpcTgHandler struct {

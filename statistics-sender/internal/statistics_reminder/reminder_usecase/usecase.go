@@ -5,12 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/IBM/sarama"
 	"github.com/Xonesent/K8s-Hub/statistics-sender/config"
 	models "github.com/Xonesent/K8s-Hub/statistics-sender/internal/business_models"
 	"github.com/Xonesent/K8s-Hub/statistics-sender/pkg/constant"
 	"github.com/gammazero/workerpool"
 )
+
+const workerQuantity = 6
 
 type ReminderUseCase struct {
 	cfg            *config.Config
@@ -36,7 +39,7 @@ func (u *ReminderUseCase) PublishStatisticsEvent() error {
 		return err
 	}
 
-	wp := workerpool.New(6)
+	wp := workerpool.New(workerQuantity)
 	errChan := make(chan error, len(chatIds))
 
 	for _, chatId := range chatIds {

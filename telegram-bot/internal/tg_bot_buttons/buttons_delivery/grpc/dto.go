@@ -7,7 +7,7 @@ import (
 
 func toSendMessage(msg *tgProto.MessageParams) *buttons_usecase.SendMessage {
 	return &buttons_usecase.SendMessage{
-		Message: msg.Message,
-		ChatId:  msg.ChatId,
+		Message: msg.GetMessage(),
+		ChatId:  msg.GetChatId(),
 	}
 }

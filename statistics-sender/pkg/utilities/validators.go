@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+var errScheduleTimeBeforeNow = errors.New("current time less than specified")
+
 func ValidateTimer(parsedTime time.Time) (time.Duration, error) {
 	loc, err := time.LoadLocation("Europe/Moscow")
 	if err != nil {
@@ -16,7 +18,7 @@ func ValidateTimer(parsedTime time.Time) (time.Duration, error) {
 		parsedTime.Hour(), parsedTime.Minute(), parsedTime.Second(), 0, now.Location())
 
 	if scheduledTime.Before(now) {
-		return -1, errors.New("current time less than specified")
+		return -1, errScheduleTimeBeforeNow
 	}
 
 	return scheduledTime.Sub(now), nil

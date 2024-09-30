@@ -10,7 +10,7 @@ func ParseTimeStr(timeStr string) (time.Time, error) {
 
 	t, err := time.Parse(layout, timeStr)
 	if err != nil {
-		return time.Time{}, fmt.Errorf("invalid time format: %v", err)
+		return time.Time{}, fmt.Errorf("invalid time format: %w", err)
 	}
 
 	return t, nil

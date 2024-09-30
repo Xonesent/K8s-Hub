@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
+	"log"
+
 	grpcServer "github.com/Xonesent/K8s-Hub/admin-panel/pkg/dependency_connectors/grpc"
 	"google.golang.org/grpc"
-	"log"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/Xonesent/K8s-Hub/admin-panel/config"
@@ -25,6 +26,7 @@ func main() {
 		log.Fatalf("Error to init logger: %v\n", err)
 	}
 
+	// nolint:gocritic // needed for local compilation
 	//if err := godotenv.Load(constant.LocalEnvFile); err != nil {
 	//	zap.L().Fatal("Error loading env variables", zap.Error(err))
 	//}
@@ -38,7 +40,7 @@ func main() {
 }
 
 func run(ctx context.Context, cfg *config.Config) {
-	clickhouseDB, err := clickDB.NewClickhouseDB(&cfg.ClickHouse)
+	clickhouseDB, err := clickDB.NewClickhouseDB(&cfg.ClickHouse) // nolint:contextcheck // not needed
 	if err != nil {
 		zap.L().Fatal("Error connecting clickhouse", zap.Error(err))
 	}

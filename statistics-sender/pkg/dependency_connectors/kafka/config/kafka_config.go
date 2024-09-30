@@ -48,6 +48,7 @@ func NewSaramaConfig(kafkaConfig *ConfigKafka) *sarama.Config {
 	return config
 }
 
+// nolint:wsl // false positive
 func getRebalanceStrategies(strategies []string) []sarama.BalanceStrategy {
 	var balanceStrategies []sarama.BalanceStrategy
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/config"
 	"github.com/Xonesent/K8s-Hub/telegram-bot/internal/server"
@@ -11,7 +13,6 @@ import (
 	"github.com/Xonesent/K8s-Hub/telegram-bot/pkg/helper_modules/logger"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"log"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 		log.Fatalf("Error to init logger: %v\n", err)
 	}
 
+	// nolint:gocritic // needed for local compilation
 	//if err := godotenv.Load(constant.EnvFile); err != nil {
 	//	zap.L().Fatal("Error loading env variables", zap.Error(err))
 	//}

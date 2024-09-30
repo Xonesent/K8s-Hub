@@ -2,8 +2,9 @@ package fiberApp
 
 import (
 	"fmt"
-	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"runtime/debug"
+
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 
 	"github.com/Xonesent/K8s-Hub/admin-panel/internal/error_handler"
 	"github.com/Xonesent/K8s-Hub/admin-panel/pkg/utilities/go_utils"
