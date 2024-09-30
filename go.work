@@ -3,4 +3,5 @@ go 1.22.5
 use (
 	./admin-panel
 	./telegram-bot
+	./statistics-sender
 )
