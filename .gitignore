@@ -1,2 +1,8 @@
 .idea
+docs
+
+*.pb.go
+*.exe
+
 .env
+.env.local

@@ -2,6 +2,7 @@ package fiberApp
 
 import (
 	"fmt"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"runtime/debug"
 
 	"github.com/Xonesent/K8s-Hub/admin-panel/internal/error_handler"
@@ -12,8 +13,8 @@ import (
 )
 
 type FiberConfig struct {
-	Host string `yaml:"Host" validate:"required"`
-	Port string `yaml:"Port" validate:"required"`
+	Host string `envconfig:"FIBER_HOST" validate:"required"`
+	Port string `envconfig:"FIBER_PORT" validate:"required"`
 }
 
 func NewFiberClient() *fiber.App {
@@ -42,6 +43,8 @@ func NewFiberClient() *fiber.App {
 			zap.L().Error("Recovered from panic: " + go_utils.LimitStackTrace(fullStackTrace, 1))
 		},
 	}))
+
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
 	return app
 }
